@@ -110,3 +110,14 @@ jobs:
           owner: ${{ steps.extract_params.outputs.owner }}
           env_vars: ${{ steps.extract_params.outputs.env_vars }}
           metadata: ${{ steps.extract_params.outputs.metadata }}
+deploy:
+  needs: generate-matrix
+  name: Deploy to Cognite Functions
+  runs-on: ubuntu-latest
+  strategy:
+    matrix:
+      function: ${{ fromJson(needs.generate-matrix.outputs.folders) }}
+      # Add environments to deploy to.
+      # Each environment should have a corresponding github environment with secrets.
+      environment:
+        - test
